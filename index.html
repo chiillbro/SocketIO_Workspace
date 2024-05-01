@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Socket.IO</title>
+    <script src="/socket.io/socket.io.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      #messages {
+        list-style-type: none;
+      }
+
+      #messages li {
+        padding: 10px 20px;
+      }
+    </style>
+  </head>
+  <body>
+    <ul id="messages"></ul>
+
+    <form id="form">
+      <input
+        type="text"
+        id="message"
+        placeholder="Enter your message"
+        autocomplete="off"
+      />
+      <button>Send</button>
+    </form>
+    <!-- <script src="https://cdn.socket.io/4.7.5/socket.io.min.js"></script> -->
+    <script>
+      const form = document.getElementById("form");
+      const input = document.getElementById("message");
+
+      const socket = io();
+      form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit("chat-message", input.value);
+          input.value = "";
+        }
+      });
+
+      socket.on("chat-message", (msg) => {
+        console.log("Received: " + msg);
+        const li = document.createElement("li");
+
+        li.innerText = `${msg}`;
+        document.querySelector("#messages").appendChild(li);
+      });
+    </script>
+  </body>
+</html>
